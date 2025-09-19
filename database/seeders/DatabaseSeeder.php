@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Article;
+use App\Models\Comment;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory()->count(50)->create();
+        $articles = Article::factory()->count(5)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach ($users as $user) {
+            $articles->random(3)->each(function ($article) use ($user) {
+                $comment = Comment::factory()->for($user)->for($article)->create();
+
+                $article->comments()->save($comment);
+            });
+        }
     }
 }
