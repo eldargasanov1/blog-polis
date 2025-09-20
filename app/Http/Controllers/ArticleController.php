@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreArticleRequest;
-use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 class ArticleController extends Controller
 {
@@ -18,7 +18,7 @@ class ArticleController extends Controller
      */
     public function index(): Response
     {
-        $articles = Article::query()->with('comments.user')->latest()->paginate()->toResourceCollection();
+        $articles = Article::query()->latest()->paginate()->toResourceCollection();
         return Inertia::render('articles/index', [
             'articles' => $articles
         ]);
@@ -49,7 +49,9 @@ class ArticleController extends Controller
      */
     public function show(Article $article): Response
     {
-        $article = $article->load('comments.user')->toResource();
+        $article = $article->load(['comments' => function ($query) {
+            $query->latest();
+        }], 'comments.user')->toResource();
         return Inertia::render('articles/show', [
             'article' => $article
         ]);

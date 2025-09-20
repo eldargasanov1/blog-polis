@@ -1,7 +1,11 @@
+import BackgroundImage from '@/components/background-image';
+import CommentList from '@/components/comment-list';
+import LinkButton from '@/components/link-button';
+import NewCommentForm from '@/components/new-comment-form';
 import { AppLayout } from '@/layouts/app-layout';
+import Container from '@/layouts/container';
 import { Article } from '@/types';
-import { useForm } from '@inertiajs/react';
-import { ChangeEvent, FormEventHandler } from 'react';
+import { JSX } from 'react';
 import { route } from 'ziggy-js';
 
 interface Props {
@@ -9,62 +13,39 @@ interface Props {
 }
 
 const Show = ({ article }: Props) => {
-    const { data, setData, post, processing, reset, errors } = useForm<Pick<Article, 'content'>>({
-        content: '',
-    });
-
-    const createComment: FormEventHandler = (e) => {
-        e.preventDefault();
-
-        post(route('articles.comments.store', article.id), {
-            preserveScroll: true,
-
-            onSuccess: () => reset(),
-        });
-    };
-
-    const onChange = (e: ChangeEvent) => {
-        const key = e.target.id;
-        const value = e.target.value;
-        setData({ ...data, [key]: value });
-    };
-
     return (
-        <div>
-            <h1>{article.title}</h1>
-            <p>{article.content}</p>
-
+        <div className="flex flex-1 flex-col gap-10 pb-12">
+            <div className="group relative flex min-h-[60vh] flex-col">
+                <BackgroundImage className="absolute pb-[55%] sm:pb-[40%] lg:pb-[20%]" />
+                <Container className="relative flex h-full max-w-5xl flex-1 flex-col gap-12 py-10">
+                    <LinkButton arrowDirection="left" href={route('articles.index')}>
+                        Список статей
+                    </LinkButton>
+                    <div className="flex flex-1 flex-col justify-end gap-3">
+                        <span>{article.created_at}</span>
+                        <div className="flex flex-col gap-10">
+                            <h1 className="text-5xl">{article.title}</h1>
+                            <p className="text-2xl">{article.content}</p>
+                        </div>
+                    </div>
+                </Container>
+            </div>
             <div>
-                <h2 className="font-bold">Comments</h2>
-                <form onSubmit={createComment} onReset={() => reset()} inert={processing} className="group inert:opacity-50">
-                    <div>
-                        <label htmlFor="content">Комментарий:</label>
-                        <input type="text" id="content" value={data.content} name="content" onChange={onChange} />
-                        {errors.content && <span>{errors.content}</span>}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <button type="submit" disabled={processing}>
-                            Создать
-                        </button>
-                        <button type="reset" disabled={processing}>
-                            Очистить
-                        </button>
-                    </div>
-                </form>
-                {article.comments.length > 0 && (
-                    <ul>
-                        {article.comments.map((comment) => (
-                            <li key={comment.id}>
-                                {comment.id} - {comment.content}
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <Container className="flex max-w-5xl flex-col gap-5">
+                    <h2 className="text-3xl font-bold">Комментарии</h2>
+                    <NewCommentForm articleId={article.id} />
+                    {article.comments.length > 0 && (
+                        <>
+                            <hr />
+                            <CommentList comments={article.comments} />
+                        </>
+                    )}
+                </Container>
             </div>
         </div>
     );
 };
 
-Show.layout = (page) => <AppLayout children={page} title={page.props.article.title} />;
+Show.layout = (page: JSX.Element) => <AppLayout children={page} title={page.props.article.title} />;
 
 export default Show;

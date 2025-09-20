@@ -1,5 +1,9 @@
+import ArticlesList from '@/components/articles-list';
+import LinkButton from '@/components/link-button';
 import { AppLayout } from '@/layouts/app-layout';
+import Container from '@/layouts/container';
 import { Article, PaginatedData } from '@/types';
+import { JSX } from 'react';
 import { route } from 'ziggy-js';
 
 interface Props {
@@ -8,26 +12,20 @@ interface Props {
 
 const Index = ({ articles }: Props) => {
     return (
-        <div>
-            <ul>
-                {articles.data.map((article) => (
-                    <li key={article.id}>
-                        <a href={route('articles.show', article.id)}>
-                            {article.id} - {article.title}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-            <div className="flex items-center gap-2">
-                <a href={articles.links.first}>First Page</a>
-                <a href={articles.links.previous}>Prev</a>
-                <a href={articles.links.next}>Next</a>
-                <a href={articles.links.last}>Last Page</a>
-            </div>
+        <div className="h-screen gap-5 py-12">
+            <Container className="flex h-full flex-1 flex-col gap-5">
+                <div className="flex items-center justify-between gap-3">
+                    <h1 className="text-5xl">Список новостей</h1>
+                    <LinkButton href={route('articles.create')} arrowDirection="right">
+                        Добавить статью
+                    </LinkButton>
+                </div>
+                <ArticlesList articles={articles} />
+            </Container>
         </div>
     );
 };
 
-Index.layout = (page) => <AppLayout children={page} title="Список постов" />;
+Index.layout = (page: JSX.Element) => <AppLayout children={page} title="Список постов" />;
 
 export default Index;

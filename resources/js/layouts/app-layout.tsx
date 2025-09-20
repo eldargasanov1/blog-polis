@@ -9,8 +9,8 @@ function AppLayout({ title, children }: Props) {
     return (
         <>
             <Head title={title}></Head>
-            <main className="flex h-full w-full flex-col items-center">
-                <div className="container">{children}</div>
+            <main className="flex min-h-screen flex-col bg-emerald-800 text-white">
+                <div className="flex flex-1 flex-col">{children}</div>
             </main>
         </>
     );

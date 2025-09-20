@@ -20,8 +20,8 @@ class ArticleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
-            'comments' => CommentResource::collection($this->comments),
-            'created_at' => $this->created_at
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'created_at' => $this->created_at->format('H:i d.m.Y'),
         ];
     }
 }
