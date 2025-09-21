@@ -20,7 +20,11 @@ const Index = ({ articles }: Props) => {
                         Добавить статью
                     </LinkButton>
                 </div>
-                <ArticlesList articles={articles} />
+                {articles.data.length != 0 ? (
+                    <ArticlesList articles={articles} />
+                ) : (
+                    <div className="flex flex-1 items-center justify-center text-5xl">Статьи отсутсвуют!</div>
+                )}
             </Container>
         </div>
     );

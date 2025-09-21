@@ -9,7 +9,7 @@ interface Props {
 
 function ArticleCard({ article }: Props) {
     return (
-        <li className="rounded-lg bg-emerald-700 p-6 transition duration-300 hover:scale-110 hover:bg-emerald-600 hover:text-yellow-400">
+        <li className="rounded-lg bg-emerald-700 p-6 transition duration-300 hover:scale-105 hover:bg-emerald-600 hover:text-yellow-400">
             <Link href={route('articles.show', article.id)} className="flex h-full w-full flex-col gap-10">
                 <div className="flex flex-1 flex-col gap-4">
                     <span className="text-3xl">{article.title}</span>

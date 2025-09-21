@@ -1,6 +1,6 @@
-import Pagination from '@/components/Pagination';
-import { Article, PaginatedData } from '@/types';
 import ArticleCard from '@/components/article-card';
+import Pagination from '@/components/pagination';
+import { Article, PaginatedData } from '@/types';
 
 interface Props {
     articles: PaginatedData<Article>;
@@ -14,7 +14,7 @@ function ArticlesList({ articles }: Props) {
                     <ArticleCard key={article.id} article={article} />
                 ))}
             </ul>
-            <Pagination links={articles.meta.links} />
+            {articles.meta.per_page < articles.meta.total && <Pagination links={articles.meta.links} />}
         </div>
     );
 }
